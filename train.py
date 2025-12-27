@@ -29,4 +29,6 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(autoencoder.parameters())
     train_model(autoencoder, lossf, optimizer, trainloader, device=device)
     torch.save(autoencoder.state_dict(), 'autoencoder.pth')
+    torch.save(autoencoder.encoder.state_dict(), 'encoder.pth')
+    torch.save(autoencoder.decoder.state_dict(), 'decoder.pth')
 
