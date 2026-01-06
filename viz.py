@@ -1,12 +1,12 @@
 import torch
 import torch.nn as nn
-from model import AutoEncoder
+from model import AutoEncoder, load_autoencoder
 import matplotlib.pyplot as plt
 from loaddata import loadCIFAR10
 
 def visualize_autoencoding(autoencoder, testdata, num_images=5):
     images, _ = next(iter(testdata))
-    images = images.to(device)
+    images = images.to('cpu')
 
     with torch.no_grad():
         reconstructed = autoencoder(images)
@@ -24,13 +24,8 @@ def visualize_autoencoding(autoencoder, testdata, num_images=5):
 
 
 if __name__ == '__main__':
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
     # load the model
-    autoencoder: AutoEncoder = AutoEncoder()
-    state = torch.load('autoencoder.pth', map_location='cpu')
-    autoencoder.load_state_dict(state)
-    autoencoder = autoencoder.to(device)
+    autoencoder: AutoEncoder = load_autoencoder('autoencoder.pth')
     autoencoder.eval()
 
     # load the test data

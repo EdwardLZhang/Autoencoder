@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+from typing import Union
 
 class Encoder(nn.Module):
     def __init__(self):
@@ -42,3 +42,19 @@ class AutoEncoder(nn.Module):
     def forward(self, x):
         compressed = self.encoder(x)
         return self.decoder(compressed)
+
+
+def load_autoencoder(path: str, device=None) -> Union[AutoEncoder, None]:
+    print(f'Loading autoencoder from {path}')
+    if device is None:
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    autoencoder: AutoEncoder = AutoEncoder()
+    try:
+        state = torch.load(path, map_location='cpu')
+        autoencoder.load_state_dict(state)
+        autoencoder = autoencoder.to(device)
+        print('Autoencoder loaded successfully')
+    except Exception:
+        autoencoder = None
+        print('Failed to load autoencoder')
+    return autoencoder
